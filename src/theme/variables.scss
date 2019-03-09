@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+
 :root {
   --ion-color-primary: #468966;
   --ion-color-primary-rgb: 70,137,102;
@@ -61,4 +63,6 @@
   --ion-color-light-contrast-rgb: 0,0,0;
   --ion-color-light-shade: #e0d391;
   --ion-color-light-tint: #fff2ae;
+
+  --ion-font-family: 'Playfair Display', sans-serif;
 }
