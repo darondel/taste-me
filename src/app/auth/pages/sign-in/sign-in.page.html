@@ -1,0 +1,21 @@
+<ion-grid fixed>
+  <ion-row justify-content-center>
+    <ion-col align-self-center>
+      <ion-img src="assets/brand.png"></ion-img>
+      <ion-text color="secondary" margin text-center>
+        <h1>Taste Me!</h1>
+      </ion-text>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" margin text-center>
+        <ion-item margin>
+          <ion-icon name="person" slot="start" color="secondary"></ion-icon>
+          <ion-input type="email" placeholder="Email" color="primary" formControlName="email" clearInput></ion-input>
+        </ion-item>
+        <ion-item margin>
+          <ion-icon name="lock" slot="start" color="secondary"></ion-icon>
+          <ion-input type="password" placeholder="Password" color="primary" formControlName="password" clearInput></ion-input>
+        </ion-item>
+        <ion-button type="submit" size="large" [disabled]="form.invalid" margin>Sign In</ion-button>
+      </form>
+    </ion-col>
+  </ion-row>
+</ion-grid>
