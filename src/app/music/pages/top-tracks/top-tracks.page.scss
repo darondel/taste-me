@@ -1,0 +1,10 @@
+ion-toolbar ion-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-toolbar ion-avatar ion-img {
+  height: 32px;
+  width: 32px;
+}

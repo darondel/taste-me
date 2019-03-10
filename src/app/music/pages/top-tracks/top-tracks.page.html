@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-avatar slot="end">
+      <ion-img src="assets/brand.png"></ion-img>
+    </ion-avatar>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" menu="start"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list lines="none">
+    <ion-item-sliding *ngFor="let track of tracks | async">
+      <ion-item>
+        <ion-card>
+          <ion-img [src]="track.image[3]['#text']"></ion-img>
+          <ion-card-header>
+            <ion-card-title>{{ track.name }}</ion-card-title>
+            <ion-card-subtitle>{{ track.artist.name }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <a [href]="track.url">URL</a>
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
