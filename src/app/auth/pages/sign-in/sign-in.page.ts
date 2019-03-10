@@ -46,7 +46,11 @@ export class SignInPage implements OnInit {
       this.authService.login(formValue.email, formValue.password).pipe(
         finalize(() => {
           loading.dismiss();
-          this.toastController.dismiss();
+          this.toastController.getTop().then(toast => {
+            if (toast) {
+              toast.dismiss();
+            }
+          });
         })
       ).subscribe({error: error => this.toastError(error.error.error.message)});
     });
