@@ -17,7 +17,7 @@ export class AppComponent {
   pages = [
     {title: 'Dashboard', enabled: false, url: '/dashboard', icon: 'analytics'},
     {title: 'Player', enabled: false, url: '/player', icon: 'musical-note'},
-    {title: 'Musics', enabled: false, url: '/musics', icon: 'musical-notes'},
+    {title: 'Musics', enabled: true, url: '/musics', icon: 'musical-notes'},
     {title: 'Chat', enabled: false, url: '/chat', icon: 'chatboxes'}
   ];
 
