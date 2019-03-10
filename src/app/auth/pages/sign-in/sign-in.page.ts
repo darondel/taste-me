@@ -48,10 +48,7 @@ export class SignInPage implements OnInit {
           loading.dismiss();
           this.toastController.dismiss();
         })
-      ).subscribe(
-        () => this.router.navigate(['/']),
-        error => this.toastError(error.error.error.message)
-      );
+      ).subscribe({error: error => this.toastError(error.error.error.message)});
     });
   }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { Storage } from '@ionic/storage';
 
@@ -18,7 +19,7 @@ export class AuthService {
   private static readonly ID_TOKEN_STORAGE_KEY = 'id_token';
   private static readonly EXPIRES_AT_STORAGE_KEY = 'expires_at';
 
-  constructor(private http: HttpClient, private storage: Storage) {
+  constructor(private http: HttpClient, private storage: Storage, private router: Router) {
   }
 
   /**
@@ -38,9 +39,13 @@ export class AuthService {
    * Performs a sign-out operation by clearing Ionic Storage relevant keys.
    */
   public logout() {
-    this.storage.remove(AuthService.EMAIL_STORAGE_KEY);
-    this.storage.remove(AuthService.ID_TOKEN_STORAGE_KEY);
-    this.storage.remove(AuthService.EXPIRES_AT_STORAGE_KEY);
+    this.storage.ready()
+      .then(() => Promise.all([
+        this.storage.remove(AuthService.EMAIL_STORAGE_KEY),
+        this.storage.remove(AuthService.ID_TOKEN_STORAGE_KEY),
+        this.storage.remove(AuthService.EXPIRES_AT_STORAGE_KEY)
+      ]))
+      .then(() => this.router.navigate(['/login']));
   }
 
   /**
@@ -57,9 +62,13 @@ export class AuthService {
    */
   private localLogin(authResponse: AuthResponse) {
     if (authResponse) {
-      this.storage.set(AuthService.EMAIL_STORAGE_KEY, authResponse.email);
-      this.storage.set(AuthService.ID_TOKEN_STORAGE_KEY, authResponse.idToken);
-      this.storage.set(AuthService.EXPIRES_AT_STORAGE_KEY, authResponse.expiresIn * 1000 + Date.now());
+      this.storage.ready()
+        .then(() => Promise.all([
+          this.storage.set(AuthService.EMAIL_STORAGE_KEY, authResponse.email),
+          this.storage.set(AuthService.ID_TOKEN_STORAGE_KEY, authResponse.idToken),
+          this.storage.set(AuthService.EXPIRES_AT_STORAGE_KEY, authResponse.expiresIn * 1000 + Date.now())
+        ]))
+        .then(() => this.router.navigate(['/']));
     }
   }
 
