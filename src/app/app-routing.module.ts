@@ -4,8 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/services/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', canActivate: [AuthGuard], loadChildren: './home/home.module#HomePageModule' },
+  { path: '', redirectTo: 'musics', pathMatch: 'full' },
   { path: 'musics', canActivate: [AuthGuard], loadChildren: './music/pages/top-tracks/top-tracks.module#TopTracksPageModule' },
   { path: 'login', loadChildren: './auth/pages/sign-in/sign-in.module#SignInPageModule' },
 ];
