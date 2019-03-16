@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { Storage } from '@ionic/storage';
 
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 import { AuthResponse } from '../models/auth-response';
+import { NotificationService } from '../../shared/services/notification.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -19,7 +20,11 @@ export class AuthService {
   private static readonly ID_TOKEN_STORAGE_KEY = 'id_token';
   private static readonly EXPIRES_AT_STORAGE_KEY = 'expires_at';
 
-  constructor(private http: HttpClient, private storage: Storage, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private storage: Storage,
+    private router: Router,
+    private notificationService: NotificationService) {
   }
 
   /**
@@ -31,7 +36,8 @@ export class AuthService {
    */
   public login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(environment.authUrl, {email, password, returnSecureToken: true}).pipe(
-      tap(authResponse => this.localLogin(authResponse))
+      tap(authResponse => this.localLogin(authResponse)),
+      catchError(this.handleError<AuthResponse>())
     );
   }
 
@@ -69,6 +75,42 @@ export class AuthService {
           this.storage.set(AuthService.EXPIRES_AT_STORAGE_KEY, authResponse.expiresIn * 1000 + Date.now())
         ]))
         .then(() => this.router.navigate(['/']));
+    }
+  }
+
+  /**
+   * Provides error feedback as a notification.
+   * Rethrows any error.
+   */
+  private handleError<T>() {
+    return (error: HttpErrorResponse): Observable<T> => {
+      let errorMessage = error.message;
+
+      if (error.error && error.error.error && error.error.error.message) {
+        errorMessage = this.getErrorMessage(error.error.error.message);
+      }
+
+      this.notificationService.present(errorMessage, 'danger');
+
+      return throwError(error);
+    };
+  }
+
+  /**
+   * Builds the message corresponding to the given error code.
+   * Displays the error code directly if unknown.
+   *
+   * @param errorCode the error code
+   */
+  private getErrorMessage(errorCode: string): string {
+    switch (errorCode) {
+      case 'EMAIL_NOT_FOUND':
+      case 'INVALID_PASSWORD':
+        return 'You entered an invalid email / password combination.';
+      case 'USER_DISABLED':
+        return 'Your account has been disabled.';
+      default:
+        return errorCode;
     }
   }
 

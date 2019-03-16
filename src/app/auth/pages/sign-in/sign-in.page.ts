@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 
 import { finalize } from 'rxjs/operators';
 
@@ -21,8 +21,7 @@ export class SignInPage implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private loadingController: LoadingController,
-    private toastController: ToastController) {
+    private loadingController: LoadingController) {
   }
 
   ngOnInit() {
@@ -44,53 +43,9 @@ export class SignInPage implements OnInit {
       const formValue = this.form.value;
 
       this.authService.login(formValue.email, formValue.password).pipe(
-        finalize(() => {
-          loading.dismiss();
-          this.toastController.getTop().then(toast => {
-            if (toast) {
-              toast.dismiss();
-            }
-          });
-        })
-      ).subscribe({error: error => this.toastError(error.error.error.message)});
+        finalize(() => loading.dismiss())
+      ).subscribe();
     });
-  }
-
-  /**
-   * Provides error feedback as a notification.
-   * Dismisses any notifications already present.
-   *
-   * @param errorCode the error code
-   */
-  private async toastError(errorCode: string) {
-    this.toastController.dismiss();
-
-    const toast = await this.toastController.create({
-      message: this.getErrorMessage(errorCode),
-      color: 'danger',
-      showCloseButton: true,
-      closeButtonText: 'X'
-    });
-
-    toast.present();
-  }
-
-  /**
-   * Builds the message corresponding to the given error code.
-   * Displays the error code directly if unknown.
-   *
-   * @param errorCode the error code
-   */
-  private getErrorMessage(errorCode: string): string {
-    switch (errorCode) {
-      case 'EMAIL_NOT_FOUND':
-      case 'INVALID_PASSWORD':
-        return 'You entered an invalid email / password combination.';
-      case 'USER_DISABLED':
-        return 'Your account has been disabled.';
-      default:
-        return errorCode;
-    }
   }
 
 }
