@@ -6,6 +6,9 @@ export const environment = {
     methods: {
       chart: {
         topTracks: 'chart.gettoptracks'
+      },
+      track: {
+        getInfo: 'track.getinfo'
       }
     },
     formats: {
