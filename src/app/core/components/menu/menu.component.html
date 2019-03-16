@@ -2,12 +2,12 @@
   <ion-menu [disabled]="isMenuDisabled">
     <ion-content>
       <ion-img src="assets/brand.png"></ion-img>
-      <ion-text color="secondary" margin text-center>
+      <ion-text color="secondary" text-center>
         <h1>Taste Me!</h1>
       </ion-text>
       <ion-list lines="none" margin>
         <ion-menu-toggle *ngFor="let page of pages" autoHide="false">
-          <ion-item routerDirection="root" [disabled]="!page.enabled" [routerLink]="[page.url]" margin>
+          <ion-item routerDirection="root" [disabled]="!page.enabled" [routerLink]="[page.url]">
             <ion-icon slot="start" [color]="iconColor" [name]="page.icon"></ion-icon>
             <ion-label [color]="labelColor">
               {{ page.title }}
@@ -15,7 +15,7 @@
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
-      <ion-fab vertical="bottom" horizontal="center">
+      <ion-fab vertical="bottom" horizontal="center" slot="fixed">
         <ion-fab-button size="small" (click)="onLogout()">
           <ion-icon name="log-out"></ion-icon>
         </ion-fab-button>
