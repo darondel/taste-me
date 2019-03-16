@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 
-import { MenuController, Platform } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+
+import { filter } from 'rxjs/operators';
 
 import { AuthService } from './auth/services/auth.service';
 
@@ -21,14 +23,16 @@ export class AppComponent {
     {title: 'Chat', enabled: false, url: '/chat', icon: 'chatboxes'}
   ];
 
+  isMenuDisabled = true;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private authService: AuthService,
-    private router: Router,
-    private menuController: MenuController) {
+    private router: Router) {
     this.initializeApp();
+    this.disableMenuIf('/login');
   }
 
   /**
@@ -42,12 +46,20 @@ export class AppComponent {
   }
 
   /**
+   * Disables the menu if some page is activated.
+   */
+  disableMenuIf(...routes: string[]) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationStart)
+    ).subscribe((event: NavigationStart) => this.isMenuDisabled = routes.includes(event.url));
+  }
+
+  /**
    * Handles logout demand.
    * Redirects to login page after it.
    */
   onLogout() {
     this.authService.logout();
-    this.menuController.close();
   }
 
 }
