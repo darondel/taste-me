@@ -20,7 +20,7 @@
 
 <ion-content *ngIf="trackInfo | async as track" padding>
   <p text-justify>
-    <ion-text [innerHTML]="track.wiki.content"></ion-text>
+    <ion-text [innerHTML]="getContent(track)"></ion-text>
   </p>
   <ion-list>
     <ion-item lines="full">

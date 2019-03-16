@@ -22,4 +22,20 @@ export class TrackPage implements OnInit {
     this.route.params.subscribe(params => this.trackInfo = this.musicService.getTrackInfo(params['artist'], params['track']));
   }
 
+  /**
+   * Retrieves the content of a track.
+   * Indicates if no content is available.
+   *
+   * @param track the track
+   */
+  getContent(track: Track): string {
+    let result = 'No content has been found for this track. Please kindly accept our apologies!';
+
+    if (track.wiki && track.wiki.content) {
+      result = track.wiki.content;
+    }
+
+    return result;
+  }
+
 }
