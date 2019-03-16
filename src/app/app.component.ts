@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
-import { filter } from 'rxjs/operators';
-
-import { AuthService } from './auth/services/auth.service';
+import { MenuPage } from './core/models/menu-page';
 
 @Component({
   selector: 'app-root',
@@ -16,23 +12,16 @@ import { AuthService } from './auth/services/auth.service';
 })
 export class AppComponent {
 
-  pages = [
+  pages: MenuPage[] = [
     {title: 'Dashboard', enabled: false, url: '/dashboard', icon: 'analytics'},
     {title: 'Player', enabled: false, url: '/player', icon: 'musical-note'},
     {title: 'Musics', enabled: true, url: '/musics', icon: 'musical-notes'},
     {title: 'Chat', enabled: false, url: '/chat', icon: 'chatboxes'}
   ];
+  routesWithMenu = ['/login'];
 
-  isMenuDisabled = true;
-
-  constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private authService: AuthService,
-    private router: Router) {
+  constructor(private platform: Platform, private splashScreen: SplashScreen, private statusBar: StatusBar) {
     this.initializeApp();
-    this.disableMenuIf('/login');
   }
 
   /**
@@ -43,23 +32,6 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
-  }
-
-  /**
-   * Disables the menu if some page is activated.
-   */
-  disableMenuIf(...routes: string[]) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationStart)
-    ).subscribe((event: NavigationStart) => this.isMenuDisabled = routes.includes(event.url));
-  }
-
-  /**
-   * Handles logout demand.
-   * Redirects to login page after it.
-   */
-  onLogout() {
-    this.authService.logout();
   }
 
 }

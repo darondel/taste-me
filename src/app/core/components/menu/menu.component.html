@@ -1,0 +1,26 @@
+<ion-split-pane>
+  <ion-menu [disabled]="isMenuDisabled">
+    <ion-content>
+      <ion-img src="assets/brand.png"></ion-img>
+      <ion-text color="secondary" margin text-center>
+        <h1>Taste Me!</h1>
+      </ion-text>
+      <ion-list lines="none" margin>
+        <ion-menu-toggle *ngFor="let page of pages" autoHide="false">
+          <ion-item routerDirection="root" [disabled]="!page.enabled" [routerLink]="[page.url]" margin>
+            <ion-icon slot="start" [color]="iconColor" [name]="page.icon"></ion-icon>
+            <ion-label [color]="labelColor">
+              {{ page.title }}
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+      <ion-fab vertical="bottom" horizontal="center">
+        <ion-fab-button size="small" (click)="onLogout()">
+          <ion-icon name="log-out"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-content>
+  </ion-menu>
+  <ng-content></ng-content>
+</ion-split-pane>
