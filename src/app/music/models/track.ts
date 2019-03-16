@@ -1,5 +1,6 @@
 import { Artist } from './artist';
 import { Image } from './image';
+import { TrackWiki } from './track-wiki';
 
 export interface Track {
   name: string;
@@ -9,4 +10,5 @@ export interface Track {
   url: string;
   artist: Artist;
   image: Image;
+  wiki: TrackWiki;
 }
