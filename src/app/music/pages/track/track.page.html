@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-img slot="end" src="assets/brand.png"></ion-img>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" menu="start"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-title slot="end" *ngIf="trackInfo | async as track">
+      <strong>{{ track.name }}</strong>
+      <small> by </small>
+      <strong>{{ track.artist.name }}</strong>
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="trackInfo | async as track" padding>
+  <p text-justify>
+    <ion-text [innerHTML]="track.wiki.content"></ion-text>
+  </p>
+  <ion-list>
+    <ion-item lines="full">
+      <ion-label color="dark">Playcount</ion-label>
+      <ion-badge slot="end" color="primary">{{ track.playcount | thousandSuffix:2 }}</ion-badge>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label color="dark">Listeners</ion-label>
+      <ion-badge slot="end" color="tertiary">{{ track.listeners | thousandSuffix:2 }}</ion-badge>
+    </ion-item>
+    <ion-item lines="none" color="secondary" detail detailIcon="exit" [href]="track.url">
+      <ion-label color="light">last.fm</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

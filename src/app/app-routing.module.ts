@@ -6,6 +6,7 @@ import { AuthGuard } from './auth/services/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: 'musics', pathMatch: 'full' },
   { path: 'musics', canActivate: [AuthGuard], loadChildren: './music/pages/top-tracks/top-tracks.module#TopTracksPageModule' },
+  { path: 'music/:artist/:track', canActivate: [AuthGuard], loadChildren: './music/pages/track/track.module#TrackPageModule' },
   { path: 'login', loadChildren: './auth/pages/sign-in/sign-in.module#SignInPageModule' },
 ];
 
