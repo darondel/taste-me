@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { Track } from '../models/track';
 import { TopTracks } from '../models/top-tracks';
+import { NotificationService } from '../../shared/services/notification.service';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -13,7 +14,7 @@ import { environment } from '../../../environments/environment';
 })
 export class MusicService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private notificationService: NotificationService) {
   }
 
   /**
@@ -23,7 +24,8 @@ export class MusicService {
     return this.http.get<TopTracks>(
       this.toURL(environment.lastFmApi.methods.chart.topTracks, environment.lastFmApi.formats.json)
     ).pipe(
-      map(topTracks => topTracks.tracks.track)
+      map(topTracks => topTracks.tracks.track),
+      catchError(this.handleError<Track[]>())
     );
   }
 
@@ -38,6 +40,24 @@ export class MusicService {
         + '?method=' + method
         + '&api_key=' + environment.lastFmApi.key
         + (format ? '&format=' + format : '');
+  }
+
+  /**
+   * Provides error feedback as a notification.
+   * Rethrows any error.
+   */
+  private handleError<T>() {
+    return (error: HttpErrorResponse): Observable<T> => {
+      let errorMessage = error.message;
+
+      if (error.error && error.error.message) {
+        errorMessage = error.error.message;
+      }
+
+      this.notificationService.present(errorMessage, 'danger');
+
+      return throwError(error);
+    };
   }
 
 }
